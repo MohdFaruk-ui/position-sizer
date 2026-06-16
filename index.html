@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Position Sizer Pro — Premium Risk Calculator & Trading Journal</title>
+    <meta name="description" content="Institutional-grade risk management calculator & offline-first trading journal for Crypto, Forex & Stocks. Eliminate emotion, secure your capital.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons (Lucide Icons via CDN) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        :root {
+            --bg-color: #050506;
+            --surface-color: #0E0F12;
+            --surface-border: #1F2229;
+            --accent-green: #00D395;
+            --accent-red: #FF3B5C;
+            --accent-blue: #5B8DEF;
+            --text-primary: #FFFFFF;
+            --text-secondary: #8E929E;
+            --glow-green: rgba(0, 211, 149, 0.15);
+            --glow-red: rgba(255, 59, 92, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Ambient Glow Backgrounds */
+        .ambient-glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 211, 149, 0.08) 0%, rgba(0,0,0,0) 70%);
+            filter: blur(80px);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .glow-1 { top: -200px; right: -100px; }
+        .glow-2 { top: 800px; left: -200px; background: radial-gradient(circle, rgba(91, 141, 239, 0.08) 0%, rgba(0,0,0,0) 70%); }
+        .glow-3 { bottom: 200px; right: -100px; }
+
+        /* Trading Grid Pattern overlay */
+        .grid-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px);
+            background-size: 40px 40px;
+            background-position: center;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header Navigation */
+        header {
+            padding: 24px 0;
+            border-bottom: 1px solid var(--surface-border);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(5, 5, 6, 0.8);
+        }
+
+        .nav-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .logo-area img {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            border: 1px solid var(--surface-border);
+        }
+
+        .logo-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text span {
+            color: var(--accent-green);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 15px;
+            transition: color 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .btn-download {
+            background-color: var(--accent-green);
+            color: #000000;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 20px rgba(0, 211, 149, 0.3);
+        }
+
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(0, 211, 149, 0.5);
+            background-color: #00ffb4;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 96px 0 64px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .badge-terminal {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0, 211, 149, 0.06);
+            border: 1px solid rgba(0, 211, 149, 0.2);
+            color: var(--accent-green);
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 24px;
+            letter-spacing: 0.5px;
+        }
+
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 56px;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            letter-spacing: -1.5px;
+        }
+
+        h1 span {
+            background: linear-gradient(90deg, #FFFFFF 0%, var(--accent-green) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-desc {
+            font-size: 19px;
+            color: var(--text-secondary);
+            max-width: 680px;
+            margin: 0 auto 40px auto;
+            font-weight: 300;
+        }
+
+        .hero-ctas {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 64px;
+        }
+
+        .btn-outline {
+            border: 1px solid var(--surface-border);
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--text-primary);
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            text-decoration: none;
+            font-size: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-outline:hover {
+            border-color: #555;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Banner Showcase */
+        .showcase-banner {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            border-radius: 16px;
+            border: 1px solid var(--surface-border);
+            overflow: hidden;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+            position: relative;
+        }
+
+        .showcase-banner img {
+            width: 100%;
+            display: block;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 96px 0;
+            border-top: 1px solid var(--surface-border);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        .section-tag {
+            font-family: 'Roboto Mono', monospace;
+            color: var(--accent-green);
+            font-size: 13px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+        }
+
+        .feature-card {
+            background-color: var(--surface-color);
+            border: 1px solid var(--surface-border);
+            padding: 32px;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(0, 211, 149, 0.3);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), 0 0 2px rgba(0, 211, 149, 0.1);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            background: rgba(0, 211, 149, 0.05);
+            border: 1px solid rgba(0, 211, 149, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-green);
+            margin-bottom: 24px;
+        }
+
+        .feature-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .feature-desc {
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 300;
+            line-height: 1.5;
+        }
+
+        /* Mockup Slider Section */
+        .mockups-section {
+            padding: 96px 0;
+            background: rgba(14, 15, 18, 0.4);
+            border-top: 1px solid var(--surface-border);
+            border-bottom: 1px solid var(--surface-border);
+            overflow: hidden;
+        }
+
+        .carousel-container {
+            display: flex;
+            gap: 24px;
+            overflow-x: auto;
+            padding: 20px 0 40px 0;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none; /* Firefox */
+        }
+
+        .carousel-container::-webkit-scrollbar {
+            display: none; /* Safari & Chrome */
+        }
+
+        .carousel-slide {
+            flex: 0 0 350px;
+            scroll-snap-align: center;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--surface-border);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease;
+        }
+
+        .carousel-slide img {
+            width: 100%;
+            display: block;
+        }
+
+        .carousel-slide:hover {
+            transform: scale(1.02);
+        }
+
+        /* Pricing Section */
+        .pricing {
+            padding: 96px 0;
+        }
+
+        .pricing-toggle {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 48px;
+        }
+
+        .toggle-label {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        .toggle-label.active {
+            color: var(--text-primary);
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+        }
+
+        .switch input { 
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--surface-border);
+            transition: .3s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: var(--text-primary);
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent-green);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+            background-color: #000000;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+            max-width: 900px;
+            margin: 0 auto;
+            align-items: stretch;
+        }
+
+        .price-card {
+            background-color: var(--surface-color);
+            border: 1px solid var(--surface-border);
+            border-radius: 16px;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .price-card.featured {
+            border-color: var(--accent-green);
+            box-shadow: 0 16px 40px rgba(0, 211, 149, 0.08);
+        }
+
+        .badge-premium {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            background: var(--accent-green);
+            color: #000;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 100px;
+            letter-spacing: 0.5px;
+        }
+
+        .price-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .price-desc {
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 300;
+            margin-bottom: 32px;
+            min-height: 42px;
+        }
+
+        .price-amount {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 32px;
+            display: flex;
+            align-items: baseline;
+        }
+
+        .price-amount span {
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-secondary);
+            font-weight: 400;
+            margin-left: 6px;
+        }
+
+        .price-features {
+            list-style: none;
+            margin-bottom: 40px;
+            flex-grow: 1;
+        }
+
+        .price-features li {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .price-features li i {
+            color: var(--accent-green);
+            font-size: 16px;
+        }
+
+        .price-features li.disabled {
+            color: #444855;
+            text-decoration: line-through;
+        }
+
+        .price-features li.disabled i {
+            color: #444855;
+        }
+
+        .btn-pricing {
+            width: 100%;
+            text-align: center;
+            padding: 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            display: block;
+            transition: all 0.2s ease;
+            font-size: 15px;
+        }
+
+        .btn-pricing-free {
+            border: 1px solid var(--surface-border);
+            color: var(--text-primary);
+            background: rgba(255,255,255,0.01);
+        }
+
+        .btn-pricing-free:hover {
+            background: rgba(255,255,255,0.03);
+            border-color: #555;
+        }
+
+        .btn-pricing-pro {
+            background: var(--accent-green);
+            color: #000;
+            box-shadow: 0 4px 16px rgba(0, 211, 149, 0.2);
+        }
+
+        .btn-pricing-pro:hover {
+            background: #00ffb4;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(0, 211, 149, 0.4);
+        }
+
+        /* Privacy Section */
+        .privacy-box {
+            background-color: var(--surface-color);
+            border: 1px solid var(--surface-border);
+            padding: 48px;
+            border-radius: 16px;
+            margin-top: 64px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .privacy-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-green), var(--accent-blue));
+        }
+
+        .privacy-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .privacy-desc {
+            color: var(--text-secondary);
+            font-size: 15px;
+            max-width: 650px;
+            margin: 0 auto;
+            font-weight: 300;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--surface-border);
+            padding: 64px 0;
+            color: var(--text-secondary);
+            font-size: 14px;
+            background-color: #020203;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 48px;
+            margin-bottom: 48px;
+        }
+
+        .footer-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+
+        .footer-logo span {
+            color: var(--accent-green);
+        }
+
+        .footer-text {
+            font-weight: 300;
+            max-width: 320px;
+        }
+
+        .footer-col h4 {
+            color: var(--text-primary);
+            font-weight: 600;
+            margin-bottom: 20px;
+            font-size: 15px;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer-col ul li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .footer-col ul li a:hover {
+            color: var(--text-primary);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.03);
+            padding-top: 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .disclaimer {
+            font-size: 11px;
+            color: #555864;
+            max-width: 600px;
+            line-height: 1.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            h1 { font-size: 40px; }
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+            .footer-bottom {
+                flex-direction: column;
+                gap: 24px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+    <div class="ambient-glow glow-3"></div>
+    <div class="grid-overlay"></div>
+
+    <!-- Navigation Header -->
+    <header>
+        <div class="container nav-wrapper">
+            <a href="#" class="logo-area">
+                <img src="store_graphics/app_icon.png" alt="Position Sizer Pro Icon">
+                <div class="logo-text">Position Sizer <span>Pro</span></div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#preview">Preview</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="https://mohdfaruk-ui.github.io/position-sizer/position-sizer-privacy-policy.html">Privacy</a></li>
+                <li><a href="#" class="btn-download">Get App <i data-lucide="arrow-right" style="width:16px;height:16px;"></i></a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="container hero">
+        <div class="badge-terminal">
+            <i data-lucide="terminal" style="width:14px;height:14px;color:var(--accent-green);"></i> OFFLINE_FIRST_TERMINAL_V1.0
+        </div>
+        <h1>Take Emotion Out of Your Trading<br><span>Calculate Risk Instantly</span></h1>
+        <p class="hero-desc">The hyper-premium, offline-first mathematical risk calculator and trading journal designed to preserve capital and enforce discipline across Crypto, Forex, and Stocks.</p>
+        <div class="hero-ctas">
+            <a href="#" class="btn-download" style="padding:14px 28px;font-size:16px;"><i data-lucide="play" style="width:18px;height:18px;fill:#000;"></i> Download for Android</a>
+            <a href="#features" class="btn-outline" style="padding:14px 28px;font-size:16px;">Explore Features</a>
+        </div>
+        
+        <!-- Showcase Feature Graphic -->
+        <div class="showcase-banner">
+            <img src="store_graphics/feature_graphic.png" alt="Position Sizer Pro Feature Showcase">
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="container features">
+        <div class="section-header">
+            <span class="section-tag">ENGINEERED FOR ACCURACY</span>
+            <h2 class="section-title">Why Professional Traders Choose Us</h2>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon"><i data-lucide="zap"></i></div>
+                <h3 class="feature-title">Zero-Latency Math</h3>
+                <p class="feature-desc">No "Calculate" buttons. Results update instantly with every single keystroke. Lock in risk parameters and size instantly.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon"><i data-lucide="alert-triangle"></i></div>
+                <h3 class="feature-title">SL > LIQ! Safety Badge</h3>
+                <p class="feature-desc">Active liquidation calculations warns you instantly in Futures mode if your Stop Loss is set beyond the liquidation point.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon"><i data-lucide="database"></i></div>
+                <h3 class="feature-title">Offline-First SQLite</h3>
+                <p class="feature-desc">Log your trades securely into a local SQLite database. Win rate, R-Multiples and distribution analytics stay 100% on device.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon"><i data-lucide="sliders"></i></div>
+                <h3 class="feature-title">Swift Risk Presets</h3>
+                <p class="feature-desc">Save custom risk profiles (e.g., "1% Forex Mini", "2% Crypto Spot") and switch setups on the fly from the presets bar.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mockup Preview Slider -->
+    <section id="preview" class="mockups-section">
+        <div class="container" style="margin-bottom: 32px;">
+            <span class="section-tag">PREMIUM INTERFACE</span>
+            <h2 class="section-title">Designed Like a Bloomberg Terminal</h2>
+        </div>
+        
+        <div class="carousel-container" style="padding-left: calc((100vw - 1200px) / 2 + 24px); padding-right: 24px;">
+            <div class="carousel-slide">
+                <img src="store_graphics/play_store_screenshot_1.png" alt="Trading Calculator Interface">
+            </div>
+            <div class="carousel-slide">
+                <img src="store_graphics/play_store_screenshot_2.png" alt="Offline Trading Journal logs">
+            </div>
+            <div class="carousel-slide">
+                <img src="store_graphics/play_store_screenshot_3.png" alt="Trading Performance Analytics Charts">
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="container pricing">
+        <div class="section-header">
+            <span class="section-tag">FLEXIBLE MONETIZATION</span>
+            <h2 class="section-title">Simple, Transparent Pricing</h2>
+        </div>
+
+        <!-- Dynamic Regional Currency Toggle -->
+        <div class="pricing-toggle">
+            <span class="toggle-label active" id="label-inr">🇮🇳 India (INR)</span>
+            <label class="switch">
+                <input type="checkbox" id="currency-toggle">
+                <span class="slider"></span>
+            </label>
+            <span class="toggle-label" id="label-usd">🇺🇸 USA (USD)</span>
+        </div>
+
+        <div class="pricing-grid">
+            <!-- Free Card -->
+            <div class="price-card">
+                <h3 class="price-title">Free Plan</h3>
+                <p class="price-desc">Essential tools for retail spot traders.</p>
+                <div class="price-amount" id="free-price">
+                    $0<span>/ forever</span>
+                </div>
+                <ul class="price-features">
+                    <li><i data-lucide="check" style="width:16px;height:16px;"></i> Spot Crypto Sizing</li>
+                    <li><i data-lucide="check" style="width:16px;height:16px;"></i> Stocks Mode (No Fees)</li>
+                    <li><i data-lucide="check" style="width:16px;height:16px;"></i> Save up to 1 Preset</li>
+                    <li><i data-lucide="check" style="width:16px;height:16px;"></i> Store up to 3 Journal entries</li>
+                    <li class="disabled"><i data-lucide="x" style="width:16px;height:16px;"></i> Futures & Margin Mode</li>
+                    <li class="disabled"><i data-lucide="x" style="width:16px;height:16px;"></i> Forex lot size calculator</li>
+                    <li class="disabled"><i data-lucide="x" style="width:16px;height:16px;"></i> Advanced dashboard analytics</li>
+                </ul>
+                <a href="#" class="btn-pricing btn-pricing-free">Start Calculating</a>
+            </div>
+
+            <!-- Pro Card -->
+            <div class="price-card featured">
+                <span class="badge-premium">RECOMMENDED</span>
+                <h3 class="price-title">Pro Plan</h3>
+                <p class="price-desc">Full access to institutional calculator suite.</p>
+                <div class="price-amount" id="pro-price">
+                    ₹1,199<span>/ year</span>
+                </div>
+                <ul class="price-features">
+                    <li><i data-lucide="check" style="width:16px;height:16px;"></i> Everything in Free</li>
+                    <li><i data-lucide="check" style="width:16px;height:16px;"></i> Futures mode & leverage parameters</li>
+                    <li><i data-lucide="check" style="width:16px;height:16px;"></i> Forex standard/mini/micro lot sizing</li>
+                    <li><i data-lucide="check" style="width:16px;height:16px;"></i> Unlimited journal entries & presets</li>
+                    <li><i data-lucide="check" style="width:16px;height:16px;"></i> Full Analytics dashboard & win streaks</li>
+                    <li><i data-lucide="check" style="width:16px;height:16px;"></i> PBKDF2 + AES backup & CSV Export</li>
+                </ul>
+                <a href="#" class="btn-pricing btn-pricing-pro">Unlock Pro Suite</a>
+            </div>
+        </div>
+
+        <!-- Offline Privacy Box -->
+        <div class="privacy-box">
+            <div style="color: var(--accent-green); font-size: 36px; margin-bottom: 16px;">
+                <i data-lucide="shield-check" style="width:48px;height:48px;"></i>
+            </div>
+            <h3 class="privacy-title">100% Offline & Private</h3>
+            <p class="privacy-desc">Your trades, balance, and presets belong strictly to you. All computations and database storing are executed on-device. No telemetry, no cloud logging, no tracking.</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <div class="footer-logo">Position Sizer <span>Pro</span></div>
+                <p class="footer-text">Professional risk management calculator and journal, helping retail traders survive and thrive in global financial markets.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="https://mohdfaruk-ui.github.io/position-sizer/position-sizer-privacy-policy.html">Privacy Policy</a></li>
+                    <li><a href="https://mohdfaruk-ui.github.io/position-sizer/position-sizer-terms.html">Terms of Service</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="mailto:anishainfotech2018@gmail.com">Contact Support</a></li>
+                    <li><a href="https://github.com/mohdfaruk-ui/position-sizer">GitHub Project</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="container footer-bottom">
+            <div class="disclaimer">
+                <strong>DISCLAIMER:</strong> Trading financial instruments (stocks, forex, cryptocurrency) involves high risk and may not be suitable for all investors. Position Sizer Pro is a mathematical tool designed for educational purposes only. Past performance does not guarantee future results. Consult a licensed financial advisor before making investment decisions.
+            </div>
+            <div>
+                &copy; 2026 FarLabs. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Script to toggle dynamic pricing on landing page -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Currency Toggle logic
+        const toggle = document.getElementById('currency-toggle');
+        const proPrice = document.getElementById('pro-price');
+        const labelInr = document.getElementById('label-inr');
+        const labelUsd = document.getElementById('label-usd');
+
+        toggle.addEventListener('change', function() {
+            if (this.checked) {
+                // USA Pricing (USD)
+                proPrice.innerHTML = '$79.99<span>/ year</span>';
+                labelUsd.classList.add('active');
+                labelInr.classList.remove('active');
+            } else {
+                // India Pricing (INR)
+                proPrice.innerHTML = '₹1,199<span>/ year</span>';
+                labelInr.classList.add('active');
+                labelUsd.classList.remove('active');
+            }
+        });
+
+        // Click label to toggle
+        labelInr.addEventListener('click', () => {
+            toggle.checked = false;
+            toggle.dispatchEvent(new Event('change'));
+        });
+
+        labelUsd.addEventListener('click', () => {
+            toggle.checked = true;
+            toggle.dispatchEvent(new Event('change'));
+        });
+    </script>
+</body>
+</html>
