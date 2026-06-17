@@ -576,6 +576,55 @@
             box-shadow: 0 6px 20px rgba(0, 211, 149, 0.4);
         }
 
+        /* Pricing Features Highlight Grid */
+        .pricing-features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 32px;
+            margin-bottom: 48px;
+        }
+
+        .pricing-feature-highlight-card {
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid var(--surface-border);
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .pricing-feature-highlight-card:hover {
+            border-color: rgba(0, 211, 149, 0.25);
+            background: rgba(0, 211, 149, 0.01);
+            transform: translateY(-2px);
+        }
+
+        .pricing-feature-highlight-icon {
+            color: var(--accent-green);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 211, 149, 0.08);
+            border-radius: 8px;
+        }
+
+        .pricing-feature-highlight-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .pricing-feature-highlight-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 300;
+            line-height: 1.5;
+        }
+
         /* Privacy Section */
         .privacy-box {
             background-color: var(--surface-color);
@@ -818,39 +867,75 @@
             <!-- Free Card -->
             <div class="price-card">
                 <h3 class="price-title">Free Plan</h3>
-                <p class="price-desc">Essential tools for retail spot traders.</p>
+                <p class="price-desc">Essential toolset for retail spot and stock investors.</p>
                 <div class="price-amount" id="free-price">
                     $0<span>/ forever</span>
                 </div>
                 <ul class="price-features">
-                    <li><i data-lucide="check" style="width:16px;height:16px;"></i> Spot Crypto Sizing</li>
-                    <li><i data-lucide="check" style="width:16px;height:16px;"></i> Stocks Mode (No Fees)</li>
-                    <li><i data-lucide="check" style="width:16px;height:16px;"></i> Save up to 1 Preset</li>
-                    <li><i data-lucide="check" style="width:16px;height:16px;"></i> Store up to 3 Journal entries</li>
-                    <li class="disabled"><i data-lucide="x" style="width:16px;height:16px;"></i> Futures & Margin Mode</li>
-                    <li class="disabled"><i data-lucide="x" style="width:16px;height:16px;"></i> Forex lot size calculator</li>
-                    <li class="disabled"><i data-lucide="x" style="width:16px;height:16px;"></i> Advanced dashboard analytics</li>
+                    <li><i data-lucide="calculator" style="width:16px;height:16px;color:var(--accent-blue);"></i> Spot Crypto Calculator</li>
+                    <li><i data-lucide="line-chart" style="width:16px;height:16px;color:var(--accent-blue);"></i> Stocks Mode (Zero Fees)</li>
+                    <li><i data-lucide="sliders" style="width:16px;height:16px;color:var(--accent-blue);"></i> 1 Saved Risk Preset</li>
+                    <li><i data-lucide="book-open" style="width:16px;height:16px;color:var(--accent-blue);"></i> Track up to 3 Trade Logs</li>
                 </ul>
-                <a href="#" class="btn-pricing btn-pricing-free">Start Calculating</a>
+                <a href="https://play.google.com/store/apps/details?id=com.positionsizer" class="btn-pricing btn-pricing-free" target="_blank">Download Free</a>
             </div>
 
             <!-- Pro Card -->
             <div class="price-card featured">
                 <span class="badge-premium">RECOMMENDED</span>
                 <h3 class="price-title">Pro Plan</h3>
-                <p class="price-desc">Full access to institutional calculator suite.</p>
+                <p class="price-desc">Full access to the institutional risk terminal.</p>
                 <div class="price-amount" id="pro-price">
                     ₹1,199<span>/ year</span>
                 </div>
                 <ul class="price-features">
                     <li><i data-lucide="check" style="width:16px;height:16px;"></i> Everything in Free</li>
-                    <li><i data-lucide="check" style="width:16px;height:16px;"></i> Futures mode & leverage parameters</li>
-                    <li><i data-lucide="check" style="width:16px;height:16px;"></i> Forex standard/mini/micro lot sizing</li>
-                    <li><i data-lucide="check" style="width:16px;height:16px;"></i> Unlimited journal entries & presets</li>
-                    <li><i data-lucide="check" style="width:16px;height:16px;"></i> Full Analytics dashboard & win streaks</li>
-                    <li><i data-lucide="check" style="width:16px;height:16px;"></i> PBKDF2 + AES backup & CSV Export</li>
+                    <li><i data-lucide="shield-alert" style="width:16px;height:16px;"></i> Futures & Margin Mode</li>
+                    <li><i data-lucide="coins" style="width:16px;height:16px;"></i> Forex Lot Sizer (Std/Mini/Micro)</li>
+                    <li><i data-lucide="infinity" style="width:16px;height:16px;"></i> Unlimited Presets & Journal Logs</li>
+                    <li><i data-lucide="bar-chart-3" style="width:16px;height:16px;"></i> Advanced Analytics Dashboard</li>
                 </ul>
-                <a href="#" class="btn-pricing btn-pricing-pro">Unlock Pro Suite</a>
+                <a href="https://play.google.com/store/apps/details?id=com.positionsizer" class="btn-pricing btn-pricing-pro" target="_blank">Unlock Pro Suite</a>
+            </div>
+        </div>
+
+        <!-- Section Header for Features Highlight -->
+        <div class="section-header" style="margin-top: 80px; margin-bottom: 32px;">
+            <span class="section-tag">UNCOMPROMISED VALUE</span>
+            <h2 class="section-title" style="font-size: 28px;">Pro Features at a Glance</h2>
+        </div>
+
+        <!-- Premium Feature Highlights Grid -->
+        <div class="pricing-features-grid">
+            <div class="pricing-feature-highlight-card">
+                <div class="pricing-feature-highlight-icon"><i data-lucide="activity" style="width:20px;height:20px;"></i></div>
+                <h4 class="pricing-feature-highlight-title">Institutional Sizing</h4>
+                <p class="pricing-feature-highlight-desc">Calculate size across Spot, Margin, Futures, and Forex. Accounts for custom broker fees and leverage bounds automatically.</p>
+            </div>
+            <div class="pricing-feature-highlight-card">
+                <div class="pricing-feature-highlight-icon"><i data-lucide="alert-triangle" style="width:20px;height:20px;"></i></div>
+                <h4 class="pricing-feature-highlight-title">Liquidation Warning</h4>
+                <p class="pricing-feature-highlight-desc">Active leverage limits notify you instantly in Futures mode if your Stop Loss level sits dangerously close or past liquidation price.</p>
+            </div>
+            <div class="pricing-feature-highlight-card">
+                <div class="pricing-feature-highlight-icon"><i data-lucide="bar-chart-3" style="width:20px;height:20px;"></i></div>
+                <h4 class="pricing-feature-highlight-title">Advanced Dashboard</h4>
+                <p class="pricing-feature-highlight-desc">Visually analyze win rates, average risk-to-reward ratios, total profit factor, and streak distributions directly on-device.</p>
+            </div>
+            <div class="pricing-feature-highlight-card">
+                <div class="pricing-feature-highlight-icon"><i data-lucide="database" style="width:20px;height:20px;"></i></div>
+                <h4 class="pricing-feature-highlight-title">Offline SQLite</h4>
+                <p class="pricing-feature-highlight-desc">No cloud servers, no trackers. Your trade journal logs are saved in a highly optimized local SQLite database file.</p>
+            </div>
+            <div class="pricing-feature-highlight-card">
+                <div class="pricing-feature-highlight-icon"><i data-lucide="shield-check" style="width:20px;height:20px;"></i></div>
+                <h4 class="pricing-feature-highlight-title">Encrypted Portability</h4>
+                <p class="pricing-feature-highlight-desc">Backup and restore your local database with custom passphrases using military-grade PBKDF2 + AES encryption. Export to CSV.</p>
+            </div>
+            <div class="pricing-feature-highlight-card">
+                <div class="pricing-feature-highlight-icon"><i data-lucide="sliders" style="width:20px;height:20px;"></i></div>
+                <h4 class="pricing-feature-highlight-title">Swift Presets</h4>
+                <p class="pricing-feature-highlight-desc">Save multiple setups like "Crypto Spot 2%" or "Forex Mini 1%" and hot-swap parameters instantly during high volatility.</p>
             </div>
         </div>
 
